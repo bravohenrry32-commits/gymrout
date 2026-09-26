@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymRout - Portal del Alumno</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body style="background-color: #00030E;" class="font-sans text-[#F3E9EC] antialiased min-h-screen flex flex-col selection:bg-[#B47A9A] selection:text-[#00030E]">
+
+    <!-- BARRA SUPERIOR ALUMNO -->
+    <header style="background-color: #0B0E1A;" class="border-b border-[#2C1B2F] py-3 px-8 sticky top-0 z-50 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <span class="w-3 h-3 rounded-full bg-[#B47A9A] animate-pulse"></span>
+            <span class="font-bold tracking-wider text-sm text-[#F3E9EC]">GYMROUT <span class="text-[#B47A9A] font-normal">| Portal Privado de Alumno</span></span>
+        </div>
+        <div>
+            <span id="nombreAlumnoHeader" class="text-xs text-[#B47A9A] font-bold"></span>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-4xl mx-auto w-full p-6 lg:p-8 space-y-8">
+        
+        <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-6 rounded-3xl shadow-xl flex justify-between items-center flex-wrap gap-4">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#B47A9A]">Tu Espacio de Entrenamiento</span>
+                <h1 id="tituloNombreAlumnoEscritorio" class="text-2xl font-bold text-[#F3E9EC]">Hola, Alumno 💪</h1>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="alumnoCambiarPestana('inicio')" id="tabBtnInicio" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#B47A9A] text-[#00030E] cursor-pointer transition">Mi Entrenamiento</button>
+                <button onclick="alumnoCambiarPestana('progreso')" id="tabBtnProgreso" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#00030E] text-zinc-400 border border-[#2C1B2F] cursor-pointer transition">Mis Estadísticas e IMC</button>
+                <button onclick="alumnoCambiarPestana('feedback')" id="tabBtnFeedback" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#00030E] text-zinc-400 border border-[#2C1B2F] cursor-pointer transition">Feedback y Notas</button>
+            </div>
+        </div>
+
+        <!-- Pestaña 1: Inicio Alumno -->
+        <div id="alumnoContenedorInicio" class="space-y-6">
+            <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-6 rounded-3xl shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-sm font-bold text-[#F3E9EC]">📅 Tu Calendario de Septiembre 2026</h2>
+                    <span class="text-xs text-[#B47A9A]">Haz clic en un día para ver su rutina asociada</span>
+                </div>
+                <div class="grid grid-cols-7 gap-2 text-center text-xs text-zinc-500 font-semibold mb-2">
+                    <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+                </div>
+                <div class="grid grid-cols-7 gap-2 text-center text-xs" id="gridCalendarioAlumnoEscritorio"></div>
+            </div>
+
+            <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-6 rounded-3xl shadow-lg space-y-6">
+                <div class="flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <span id="alumnNombreRutinaActiva" class="text-xs text-[#B47A9A] font-bold uppercase tracking-wider">Bloque Activo</span>
+                        <h2 class="text-lg font-bold text-[#F3E9EC]">Registro de Ejercicios y Series</h2>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div id="contenedorBotonesRutinasAlumnoEscritorio" class="flex gap-2"></div>
+                        <button onclick="enviarRutinaWhatsApp()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 shadow-md">
+                            <span>💬</span> WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                <div id="alumnListaEjerciciosEscritorio" class="space-y-4"></div>
+
+                <button onclick="completarRutinaAlumnoEscritorio()" style="background-color: #5E3A5C; color: #F3E9EC;" class="w-full hover:bg-[#B47A9A] hover:text-[#00030E] font-bold py-3.5 rounded-2xl transition cursor-pointer shadow-lg text-sm">
+                    Marcar rutina como completada 🌸
+                </button>
+            </div>
+        </div>
+
+        <!-- Pestaña 2: Estadísticas -->
+        <div id="alumnoContenedorProgreso" class="hidden space-y-6">
+            <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-8 rounded-3xl shadow-lg space-y-6">
+                <h2 class="text-xl font-bold text-[#F3E9EC]">📈 Estadísticas Avanzadas, IMC y Evolución</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div style="background-color: #00030E;" class="p-4 rounded-2xl border border-[#2C1B2F]">
+                        <span class="text-xs text-zinc-400 block mb-1">Peso Corporal Actual</span>
+                        <span id="aluProgresoPeso" class="text-lg font-bold text-[#B47A9A]">--</span>
+                    </div>
+                    <div style="background-color: #00030E;" class="p-4 rounded-2xl border border-[#2C1B2F]">
+                        <span class="text-xs text-zinc-400 block mb-1">Índice de Masa Corporal (IMC)</span>
+                        <span id="aluProgresoIMC" class="text-lg font-bold text-[#F3E9EC]">--</span>
+                    </div>
+                    <div style="background-color: #00030E;" class="p-4 rounded-2xl border border-[#2C1B2F]">
+                        <span class="text-xs text-zinc-400 block mb-1">Objetivo Actual</span>
+                        <span id="aluProgresoObjetivo" class="text-xs font-semibold text-[#B47A9A] italic">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestaña 3: Feedback -->
+        <div id="alumnoContenedorFeedback" class="hidden space-y-6">
+            <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-8 rounded-3xl shadow-lg space-y-6">
+                <h2 class="text-xl font-bold text-[#F3E9EC]">📤 Enviar Video y Bitácora del Entrenador</h2>
+                <div class="space-y-4 text-xs">
+                    <div>
+                        <label class="block font-semibold text-zinc-400 uppercase mb-2">Sube tu archivo de video / foto técnica:</label>
+                        <input type="file" class="w-full text-zinc-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#B47A9A] file:text-[#00030E] hover:file:bg-[#5E3A5C] hover:file:text-[#F3E9EC] cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-zinc-400 uppercase mb-2">Tu duda o comentario para Coach HB:</label>
+                        <textarea id="comentarioAlumnoEscritorio" rows="3" placeholder="Escribe tu consulta..." style="background-color: #00030E; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-3 rounded-xl placeholder-zinc-600 focus:outline-none focus:border-[#B47A9A]"></textarea>
+                    </div>
+                    <button onclick="alumnoEnviaFeedbackEscritorio()" style="background-color: #B47A9A; color: #00030E;" class="w-full hover:bg-[#5E3A5C] hover:text-[#F3E9EC] font-bold py-3 rounded-xl transition cursor-pointer">
+                        Enviar Video al Entrenador
+                    </button>
+                    <div class="pt-4 border-t border-[#2C1B2F] space-y-3">
+                        <span class="font-bold text-[#B47A9A] uppercase block">📓 Bitácora / Historial de Notas del Coach:</span>
+                        <div id="bitacoraNotasCoach" style="background-color: #00030E;" class="p-4 rounded-xl border border-[#2C1B2F] text-zinc-300 space-y-2">
+                            <p class="italic text-zinc-500">"Aún no hay notas registradas en tu bitácora."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let baseDatosAlumnos = JSON.parse(localStorage.getItem('gymrout_db')) || {
+            juan: {
+                id: 'juan',
+                nombre: "Juan Pérez",
+                pesoNum: 89.0,
+                alturaNum: 178,
+                banca: "92.5 kg",
+                sentadilla: "120.0 kg",
+                objetivo: "Hipertrofia limpia",
+                diasAsignados: [1, 3, 5, 8, 10, 12, 15, 17, 19, 22, 24, 26, 29],
+                diasCompletados: [],
+                bitacoraNotas: ["Revisión inicial: buena postura en press de banca."],
+                rutinasAsociadasDias: { "Lunes": "Push (Empuje)", "Jueves": "Push (Empuje)", "Martes": "Pull (Tracción)" },
+                rutinas: {
+                    "Push (Empuje)": [
+                        { nombre: "Press de banca plano", seriesReps: "4 series · 8-10 reps", historialPrevio: "80kg x 8 reps" },
+                        { nombre: "Press inclinado mancuernas", seriesReps: "3 series · 10-12 reps", historialPrevio: "28kg x 10 reps" }
+                    ],
+                    "Pull (Tracción)": [
+                        { nombre: "Dominadas", seriesReps: "3 series · Max reps", historialPrevio: "10 reps" }
+                    ]
+                }
+            }
+        };
+
+        // Para esta demo tomamos el primer alumno de la lista o Juan por defecto
+        let alumnoActivoId = Object.keys(baseDatosAlumnos)[0] || 'juan';
+        let rutinaSeleccionadaKey = '';
+
+        function cargarPortalAlumno() {
+            let al = baseDatosAlumnos[alumnoActivoId];
+            if(!al) return;
+            document.getElementById('tituloNombreAlumnoEscritorio').innerText = "Hola, " + al.nombre + " 💪";
+            document.getElementById('nombreAlumnoHeader').innerText = "Alumno: " + al.nombre;
+            
+            document.getElementById('aluProgresoPeso').innerText = al.pesoNum + " kg";
+            let alturaMetros = al.alturaNum / 100;
+            let imc = (al.pesoNum / (alturaMetros * alturaMetros)).toFixed(1);
+            let clasificacion = imc < 18.5 ? "Bajo peso" : imc < 25 ? "Peso normal" : imc < 30 ? "Sobrepeso" : "Obesidad";
+            document.getElementById('aluProgresoIMC').innerText = imc + " (" + clasificacion + ")";
+            document.getElementById('aluProgresoObjetivo').innerText = al.objetivo;
+
+            cargarBotonesRutinasAlumno();
+            renderizarCalendarioAlumnoEscritorio();
+            renderizarBitacoraAlumno();
+        }
+
+        function cargarBotonesRutinasAlumno() {
+            let al = baseDatosAlumnos[alumnoActivoId];
+            let contenedor = document.getElementById('contenedorBotonesRutinasAlumnoEscritorio');
+            contenedor.innerHTML = "";
+            let llaves = Object.keys(al.rutinas);
+            if(llaves.length > 0 && !rutinaSeleccionadaKey) rutinaSeleccionadaKey = llaves[0];
+
+            llaves.forEach((k) => {
+                let clase = (k === rutinaSeleccionadaKey) ? "bg-[#B47A9A] text-[#00030E] font-bold" : "bg-[#00030E] text-zinc-300 border border-[#2C1B2F]";
+                contenedor.innerHTML += `<button onclick="seleccionarRutinaAlumnoEscritorio('${k}', this)" class="px-3 py-1.5 rounded-xl text-xs transition cursor-pointer ${clase}">${k}</button>`;
+            });
+
+            renderizarEjerciciosAlumnoEscritorio();
+        }
+
+        function seleccionarRutinaAlumnoEscritorio(key, btn) {
+            rutinaSeleccionadaKey = key;
+            cargarBotonesRutinasAlumno();
+        }
+
+        function renderizarEjerciciosAlumnoEscritorio() {
+            let al = baseDatosAlumnos[alumnoActivoId];
+            let lista = al.rutinas[rutinaSeleccionadaKey] || [];
+            let contenedor = document.getElementById('alumnListaEjerciciosEscritorio');
+            document.getElementById('alumnNombreRutinaActiva').innerText = "Bloque: " + (rutinaSeleccionadaKey || 'Ninguno');
+            contenedor.innerHTML = "";
+
+            if(lista.length === 0) {
+                contenedor.innerHTML = `<p class="text-xs text-zinc-500 italic">No hay ejercicios asignados en este bloque.</p>`;
+                return;
+            }
+
+            lista.forEach((ex) => {
+                contenedor.innerHTML += `
+                    <div style="background-color: #00030E;" class="border border-[#2C1B2F] p-4 rounded-2xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-sm text-[#F3E9EC]">${ex.nombre}</h4>
+                                <p class="text-xs text-[#B47A9A]">Objetivo: ${ex.seriesReps}</p>
+                            </div>
+                            <span class="text-[10px] text-zinc-400 bg-[#0B0E1A] px-2.5 py-1 rounded-lg border border-[#2C1B2F]">
+                                💡 Semana pasada: <strong class="text-[#F3E9EC]">${ex.historialPrevio || 'N/A'}</strong>
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#2C1B2F] text-xs">
+                            <div class="flex items-center gap-2"><span class="text-zinc-500">S1:</span> <input type="text" placeholder="8 reps - 80kg" style="background-color: #0B0E1A; color: #F3E9EC;" class="border border-[#2C1B2F] p-1.5 rounded-lg w-full"></div>
+                            <div class="flex items-center gap-2"><span class="text-zinc-500">S2:</span> <input type="text" placeholder="8 reps - 80kg" style="background-color: #0B0E1A; color: #F3E9EC;" class="border border-[#2C1B2F] p-1.5 rounded-lg w-full"></div>
+                            <div class="flex items-center gap-2"><span class="text-zinc-500">S3:</span> <input type="text" placeholder="8 reps - 80kg" style="background-color: #0B0E1A; color: #F3E9EC;" class="border border-[#2C1B2F] p-1.5 rounded-lg w-full"></div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function enviarRutinaWhatsApp() {
+            let al = baseDatosAlumnos[alumnoActivoId];
+            let lista = al.rutinas[rutinaSeleccionadaKey] || [];
+            let texto = `Hola ${al.nombre}, aquí tienes tu rutina *${rutinaSeleccionadaKey}* de GymRout:%0A`;
+            lista.forEach((ex, i) => {
+                texto += `%0A${i+1}. *${ex.nombre}* - ${ex.seriesReps} (Historial: ${ex.historialPrevio})`;
+            });
+            texto += `%0A%0A¡A darlo todo con Coach HB! 🚀`;
+            window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
+        }
+
+        function completarRutinaAlumnoEscritorio() {
+            let al = baseDatosAlumnos[alumnoActivoId];
+            let diaHoy = 24;
+            if(!al.diasCompletados.includes(diaHoy)) {
+                al.diasCompletados.push(diaHoy);
+                localStorage.setItem('gymrout_db', JSON.stringify(baseDatosAlumnos));
+            }
+            renderizarCalendarioAlumnoEscritorio();
+            alert("¡Rutina marcada como completada con éxito!");
+        }
+
+        function renderizarCalendarioAlumnoEscritorio() {
+            let al = baseDatosAlumnos[alumnoActivoId];
+            let grid = document.getElementById('gridCalendarioAlumnoEscritorio');
+            grid.innerHTML = `<div></div>`;
+
+            const diasSemanaNombres = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+            for(let i = 1; i <= 30; i++) {
+                let nombreDiaSemana = diasSemanaNombres[(i - 1) % 7];
+                let rutinaAsociada = al.rutinasAsociadasDias[nombreDiaSemana];
+                let completado = al.diasCompletados.includes(i);
+                let clases = "h-11 rounded-xl flex flex-col items-center justify-center font-bold text-[10px] transition border cursor-pointer ";
+
+                if(completado) {
+                    clases += "bg-[#5E3A5C] border-[#B47A9A] text-[#F3E9EC]";
+                } else if(rutinaAsociada) {
+                    clases += "bg-[#B47A9A]/30 border-[#B47A9A] text-[#F3E9EC]";
+                } else {
+                    clases += "bg-[#00030E] border-[#2C1B2F] text-zinc-600";
+                }
+
+                let onclickAccion = rutinaAsociada ? `onclick="seleccionarRutinaPorDia('${rutinaAsociada}')"` : '';
+                grid.innerHTML += `<div ${onclickAccion} class="${clases}"><span>${i}</span><span class="text-[8px] font-normal opacity-70">${rutinaAsociada ? rutinaAsociada.split(' ')[0] : ''}</span></div>`;
+            }
+        }
+
+        function seleccionarRutinaPorDia(nombreRutina) {
+            rutinaSeleccionadaKey = nombreRutina;
+            cargarBotonesRutinasAlumno();
+            alert(`¡Cargando rutina "${nombreRutina}" asignada para este día!`);
+        }
+
+        function renderizarBitacoraAlumno() {
+            let al = baseDatosAlumnos[alumnoActivoId];
+            let caja = document.getElementById('bitacoraNotasCoach');
+            caja.innerHTML = "";
+            if(!al.bitacoraNotas || al.bitacoraNotas.length === 0) {
+                caja.innerHTML = `<p class="italic text-zinc-500">"Aún no hay notas registradas en tu bitácora."</p>`;
+                return;
+            }
+            al.bitacoraNotas.forEach((nota, index) => {
+                caja.innerHTML += `<p class="text-xs border-b border-[#2C1B2F] pb-1.5"><strong>Nota #${index + 1}:</strong> ${nota}</p>`;
+            });
+        }
+
+        function alumnoCambiarPestana(tab) {
+            document.getElementById('alumnoContenedorInicio').classList.add('hidden');
+            document.getElementById('alumnoContenedorProgreso').classList.add('hidden');
+            document.getElementById('alumnoContenedorFeedback').classList.add('hidden');
+
+            document.getElementById('tabBtnInicio').className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#00030E] text-zinc-400 border border-[#2C1B2F] cursor-pointer transition";
+            document.getElementById('tabBtnProgreso').className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#00030E] text-zinc-400 border border-[#2C1B2F] cursor-pointer transition";
+            document.getElementById('tabBtnFeedback').className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#00030E] text-zinc-400 border border-[#2C1B2F] cursor-pointer transition";
+
+            if(tab === 'inicio') {
+                document.getElementById('alumnoContenedorInicio').classList.remove('hidden');
+                document.getElementById('tabBtnInicio').className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#B47A9A] text-[#00030E] cursor-pointer transition";
+            } else if(tab === 'progreso') {
+                document.getElementById('alumnoContenedorProgreso').classList.remove('hidden');
+                document.getElementById('tabBtnProgreso').className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#B47A9A] text-[#00030E] cursor-pointer transition";
+            } else if(tab === 'feedback') {
+                document.getElementById('alumnoContenedorFeedback').classList.remove('hidden');
+                document.getElementById('tabBtnFeedback').className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#B47A9A] text-[#00030E] cursor-pointer transition";
+            }
+        }
+
+        function alumnoEnviaFeedbackEscritorio() {
+            alert("¡Video y comentario enviados a Coach HB!");
+            document.getElementById('comentarioAlumnoEscritorio').value = "";
+        }
+
+        window.onload = function() {
+            cargarPortalAlumno();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymRout - Panel de Entrenador</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body style="background-color: #00030E;" class="font-sans text-[#F3E9EC] antialiased min-h-screen flex flex-col selection:bg-[#B47A9A] selection:text-[#00030E]">
+
+    <!-- BARRA SUPERIOR COACH -->
+    <header style="background-color: #0B0E1A;" class="border-b border-[#2C1B2F] py-3 px-8 sticky top-0 z-50 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <span class="w-3 h-3 rounded-full bg-[#B47A9A] animate-pulse"></span>
+            <span class="font-bold tracking-wider text-sm text-[#F3E9EC]">GYMROUT <span class="text-[#B47A9A] font-normal">| Panel Privado Coach HB</span></span>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="alumno.html" target="_blank" style="background-color: #0B0E1A; color: #F3E9EC; border-color: #5E3A5C;" class="px-3 py-1.5 rounded-xl text-xs font-bold border hover:bg-[#B47A9A] hover:text-[#00030E] transition cursor-pointer">
+                Ver Portal de Alumno (Demo) ↗
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl mx-auto w-full p-6 lg:p-8 space-y-8">
+        <!-- Cabecera -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#0B0E1A] border border-[#2C1B2F] p-6 rounded-3xl shadow-xl">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-[#B47A9A]">Administración General</span>
+                <h1 class="text-2xl font-extrabold text-[#F3E9EC] tracking-tight">Gestión de Alumnos y Programación</h1>
+            </div>
+            <div>
+                <button onclick="abrirModalInscripcion()" style="background-color: #B47A9A; color: #00030E;" class="px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-[#5E3A5C] hover:text-[#F3E9EC] transition cursor-pointer shadow-md">
+                    + Inscribir Nuevo Alumno (Anamnesis)
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Columna Izquierda -->
+            <div class="space-y-6">
+                <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-6 rounded-3xl space-y-4 shadow-lg">
+                    <label class="block text-xs font-semibold text-[#B47A9A] uppercase tracking-wider">Seleccionar Alumno Activo:</label>
+                    <select id="selectAlumnoCoach" onchange="actualizarPanelCoach()" style="background-color: #00030E; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-3 rounded-xl text-sm focus:outline-none focus:border-[#B47A9A] cursor-pointer">
+                    </select>
+                </div>
+
+                <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-6 rounded-3xl space-y-4 shadow-lg">
+                    <h3 class="text-sm font-bold text-[#B47A9A] uppercase tracking-wider flex items-center gap-2">
+                        <span>📈</span> Récords y Ficha Actual
+                    </h3>
+                    <div style="background-color: #00030E;" class="p-4 rounded-2xl border border-[#2C1B2F] space-y-3 text-xs">
+                        <div class="flex justify-between items-center border-b border-[#2C1B2F] pb-2">
+                            <span class="text-zinc-400">Peso Corporal:</span>
+                            <span id="statPeso" class="font-bold text-[#B47A9A] text-sm">--</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-[#2C1B2F] pb-2">
+                            <span class="text-zinc-400">PR Press de Banca:</span>
+                            <span id="statBanca" class="font-bold text-[#F3E9EC]">--</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-[#2C1B2F] pb-2">
+                            <span class="text-zinc-400">PR Sentadilla:</span>
+                            <span id="statSentadilla" class="font-bold text-[#F3E9EC]">--</span>
+                        </div>
+                        <div class="pt-1">
+                            <span class="text-zinc-400 block mb-1">Objetivo:</span>
+                            <p id="statObjetivo" class="font-semibold text-[#B47A9A] italic">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Creador Avanzado con Plantillas y Días -->
+                    <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-6 rounded-3xl space-y-4 shadow-lg flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-sm font-bold text-[#B47A9A] uppercase tracking-wider flex items-center gap-2">
+                                    <span>🛠️</span> Creador de Rutinas y Días
+                                </h3>
+                                <button onclick="agregarFilaEjercicioCoach()" style="background-color: #5E3A5C; color: #F3E9EC;" class="px-3 py-1 rounded-lg text-xs font-bold hover:bg-[#B47A9A] hover:text-[#00030E] transition cursor-pointer">
+                                    + Ejercicio
+                                </button>
+                            </div>
+
+                            <div>
+                                <label class="block text-[10px] text-zinc-400 uppercase mb-1">Cargar Plantilla:</label>
+                                <select id="selectPlantilla" onchange="cargarPlantillaCoach(this.value)" style="background-color: #00030E; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-2 rounded-xl text-xs focus:outline-none focus:border-[#B47A9A] cursor-pointer">
+                                    <option value="">-- Selecciona una plantilla --</option>
+                                    <option value="fullbody">Full Body A</option>
+                                    <option value="push">Push (Empuje)</option>
+                                    <option value="pull">Pull (Tracción)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-[10px] text-zinc-400 uppercase mb-1">Nombre de la Rutina</label>
+                                <input type="text" id="inputNombreRutina" placeholder="Ej: Push A" style="background-color: #00030E; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-2 rounded-xl text-xs placeholder-zinc-600 focus:outline-none focus:border-[#B47A9A]">
+                            </div>
+
+                            <div>
+                                <label class="block text-[10px] text-[#B47A9A] uppercase mb-1 font-bold">Asignar a los días de la semana:</label>
+                                <div class="grid grid-cols-4 gap-2 text-xs" id="selectorDiasRutinaCoach">
+                                    <label class="flex items-center gap-1.5 cursor-pointer bg-[#00030E] border border-[#2C1B2F] p-2 rounded-xl"><input type="checkbox" value="Lunes" class="checkDia"> Lunes</label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer bg-[#00030E] border border-[#2C1B2F] p-2 rounded-xl"><input type="checkbox" value="Martes" class="checkDia"> Martes</label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer bg-[#00030E] border border-[#2C1B2F] p-2 rounded-xl"><input type="checkbox" value="Miércoles" class="checkDia"> Miércoles</label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer bg-[#00030E] border border-[#2C1B2F] p-2 rounded-xl"><input type="checkbox" value="Jueves" class="checkDia"> Jueves</label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer bg-[#00030E] border border-[#2C1B2F] p-2 rounded-xl"><input type="checkbox" value="Viernes" class="checkDia"> Viernes</label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer bg-[#00030E] border border-[#2C1B2F] p-2 rounded-xl"><input type="checkbox" value="Sábado" class="checkDia"> Sábado</label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer bg-[#00030E] border border-[#2C1B2F] p-2 rounded-xl"><input type="checkbox" value="Domingo" class="checkDia"> Domingo</label>
+                                </div>
+                            </div>
+
+                            <div id="contenedorFilasCoach" class="space-y-2.5 max-h-40 overflow-y-auto pr-1"></div>
+                        </div>
+
+                        <button onclick="guardarRutinaDinamicaCoach()" style="background-color: #B47A9A; color: #00030E;" class="w-full hover:bg-[#5E3A5C] hover:text-[#F3E9EC] font-bold py-3 rounded-xl transition cursor-pointer shadow-md mt-4 text-xs">
+                            Guardar Rutina y Días Asociados 🚀
+                        </button>
+                    </div>
+
+                    <!-- Calendario General -->
+                    <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-6 rounded-3xl space-y-4 shadow-lg flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-[#B47A9A] uppercase tracking-wider flex items-center gap-2 mb-2">
+                                <span>📅</span> Calendario Mensual del Alumno
+                            </h3>
+                            <p class="text-xs text-zinc-400 mb-4">Haz clic para marcar fechas activas:</p>
+                            <div class="grid grid-cols-7 gap-1.5 text-center text-xs text-zinc-500 font-semibold mb-2">
+                                <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+                            </div>
+                            <div class="grid grid-cols-7 gap-1.5 text-center text-xs" id="gridCalendarioCoachAsignacion"></div>
+                        </div>
+                        <div class="text-[10px] text-[#B47A9A] bg-[#00030E] p-2.5 rounded-xl border border-[#2C1B2F] text-center">
+                            Las rutinas se vinculan automáticamente a sus respectivos días.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buzón de Feedback -->
+                <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] p-6 rounded-3xl shadow-lg">
+                    <h3 class="text-sm font-bold text-[#B47A9A] uppercase tracking-wider flex items-center gap-2">
+                        <span>📥</span> Buzón de Feedback y Técnica
+                    </h3>
+                    <div style="background-color: #00030E;" class="p-4 rounded-2xl border border-[#2C1B2F] space-y-3">
+                        <div class="flex justify-between items-center text-xs text-zinc-400">
+                            <span id="lblFeedbackAlumnoCoach">Alumno: Juan Pérez</span>
+                            <span class="text-[#B47A9A] font-bold">📹 Video Recibido</span>
+                        </div>
+                        <p class="text-xs text-zinc-300 bg-[#0B0E1A] p-3 rounded-xl border border-[#2C1B2F] italic">
+                            "Compa, siento que en la última serie me costó bloquear los codos."
+                        </p>
+                        <textarea id="respuestaCoach" rows="2" placeholder="Escribe tu corrección técnica..." style="background-color: #0B0E1A; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-3 rounded-xl text-xs placeholder-zinc-500 focus:outline-none focus:border-[#B47A9A]"></textarea>
+                        <button onclick="enviarRespuestaCoach()" style="background-color: #B47A9A; color: #00030E;" class="w-full hover:bg-[#5E3A5C] hover:text-[#F3E9EC] font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
+                            Enviar Corrección y Guardar en Bitácora
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL DE INSCRIPCIÓN -->
+    <div id="modalInscripcion" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div style="background-color: #0B0E1A;" class="border border-[#2C1B2F] w-full max-w-lg p-8 rounded-3xl space-y-6 relative shadow-2xl">
+            <button onclick="cerrarModalInscripcion()" class="absolute top-6 right-6 text-zinc-400 hover:text-white text-base">✕</button>
+            <div class="space-y-1">
+                <span class="text-xs font-bold text-[#B47A9A] uppercase tracking-widest">Nuevo Registro</span>
+                <h2 class="text-xl font-bold text-[#F3E9EC]">Ficha de Anamnesis e Inscripción</h2>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-zinc-400 uppercase mb-1">Nombre Completo</label>
+                    <input type="text" id="nuevoNombre" placeholder="Ej: Carlos Gómez" style="background-color: #00030E; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-3 rounded-xl placeholder-zinc-600 focus:outline-none focus:border-[#B47A9A]">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-zinc-400 uppercase mb-1">Peso (kg)</label>
+                        <input type="number" id="nuevoPesoNum" placeholder="75" style="background-color: #00030E; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-3 rounded-xl placeholder-zinc-600 focus:outline-none focus:border-[#B47A9A]">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-zinc-400 uppercase mb-1">Altura (cm)</label>
+                        <input type="number" id="nuevoAlturaNum" placeholder="175" style="background-color: #00030E; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-3 rounded-xl placeholder-zinc-600 focus:outline-none focus:border-[#B47A9A]">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-zinc-400 uppercase mb-1">Objetivo</label>
+                    <input type="text" id="nuevoObjetivo" placeholder="Hipertrofia" style="background-color: #00030E; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-3 rounded-xl placeholder-zinc-600 focus:outline-none focus:border-[#B47A9A]">
+                </div>
+                <button onclick="registrarNuevoAlumno()" style="background-color: #B47A9A; color: #00030E;" class="w-full hover:bg-[#5E3A5C] hover:text-[#F3E9EC] font-bold py-3.5 rounded-xl transition cursor-pointer mt-2">
+                    Inscribir y Calcular IMC 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let baseDatosAlumnos = JSON.parse(localStorage.getItem('gymrout_db')) || {
+            juan: {
+                id: 'juan',
+                nombre: "Juan Pérez",
+                pesoNum: 89.0,
+                alturaNum: 178,
+                banca: "92.5 kg",
+                sentadilla: "120.0 kg",
+                muerto: "150.0 kg",
+                objetivo: "Hipertrofia limpia",
+                diasAsignados: [1, 3, 5, 8, 10, 12, 15, 17, 19, 22, 24, 26, 29],
+                diasCompletados: [],
+                bitacoraNotas: ["Revisión inicial: buena postura en press de banca."],
+                rutinasAsociadasDias: { "Lunes": "Push (Empuje)", "Jueves": "Push (Empuje)", "Martes": "Pull (Tracción)" },
+                rutinas: {
+                    "Push (Empuje)": [
+                        { nombre: "Press de banca plano", seriesReps: "4 series · 8-10 reps", historialPrevio: "80kg x 8 reps" },
+                        { nombre: "Press inclinado mancuernas", seriesReps: "3 series · 10-12 reps", historialPrevio: "28kg x 10 reps" }
+                    ],
+                    "Pull (Tracción)": [
+                        { nombre: "Dominadas", seriesReps: "3 series · Max reps", historialPrevio: "10 reps" }
+                    ]
+                }
+            }
+        };
+
+        let alumnoActivoId = 'juan';
+
+        function guardarEnLocalStorage() {
+            localStorage.setItem('gymrout_db', JSON.stringify(baseDatosAlumnos));
+        }
+
+        function poblarSelectAlumnos() {
+            let select = document.getElementById('selectAlumnoCoach');
+            select.innerHTML = "";
+            for(let key in baseDatosAlumnos) {
+                let al = baseDatosAlumnos[key];
+                select.innerHTML += `<option value="${key}">${al.nombre} (Obj: ${al.objetivo})</option>`;
+            }
+            select.value = alumnoActivoId;
+        }
+
+        function actualizarPanelCoach() {
+            let select = document.getElementById('selectAlumnoCoach');
+            alumnoActivoId = select.value;
+            let al = baseDatosAlumnos[alumnoActivoId];
+
+            document.getElementById('statPeso').innerText = al.pesoNum + " kg";
+            document.getElementById('statBanca').innerText = al.banca;
+            document.getElementById('statSentadilla').innerText = al.sentadilla;
+            document.getElementById('statObjetivo').innerText = al.objetivo;
+            document.getElementById('lblFeedbackAlumnoCoach').innerText = "Alumno: " + al.nombre;
+
+            renderizarCalendarioCoachAsignacion();
+            inicializarFilasCoach();
+        }
+
+        let filasCoach = [{ ejercicio: "", seriesReps: "", previo: "" }];
+
+        function inicializarFilasCoach() {
+            filasCoach = [{ ejercicio: "", seriesReps: "", previo: "" }];
+            renderizarFilasCoach();
+            document.querySelectorAll('.checkDia').forEach(c => c.checked = false);
+        }
+
+        function cargarPlantillaCoach(tipo) {
+            if(tipo === 'fullbody') {
+                document.getElementById('inputNombreRutina').value = "Full Body A";
+                filasCoach = [
+                    { ejercicio: "Sentadilla libre", seriesReps: "4 series · 8 reps", previo: "100kg x 8" },
+                    { ejercicio: "Press de banca plano", seriesReps: "4 series · 8-10 reps", previo: "85kg x 8" }
+                ];
+            } else if(tipo === 'push') {
+                document.getElementById('inputNombreRutina').value = "Push (Empuje)";
+                filasCoach = [
+                    { ejercicio: "Press militar", seriesReps: "4 series · 8 reps", previo: "60kg x 8" },
+                    { ejercicio: "Press banca mancuernas", seriesReps: "3 series · 10 reps", previo: "30kg x 10" }
+                ];
+            } else if(tipo === 'pull') {
+                document.getElementById('inputNombreRutina').value = "Pull (Tracción)";
+                filasCoach = [
+                    { ejercicio: "Dominadas", seriesReps: "4 series · 6 reps", previo: "+10kg x 6" },
+                    { ejercicio: "Remo con barra", seriesReps: "3 series · 10 reps", previo: "70kg x 10" }
+                ];
+            }
+            renderizarFilasCoach();
+        }
+
+        function agregarFilaEjercicioCoach() {
+            if(filasCoach.length >= 8) { alert("Máximo 8 ejercicios."); return; }
+            filasCoach.push({ ejercicio: "", seriesReps: "", previo: "Sin historial" });
+            renderizarFilasCoach();
+        }
+
+        function eliminarFilaEjercicioCoach(index) {
+            if(filasCoach.length === 1) { alert("Debe haber al menos un ejercicio."); return; }
+            filasCoach.splice(index, 1);
+            renderizarFilasCoach();
+        }
+
+        function renderizarFilasCoach() {
+            let contenedor = document.getElementById('contenedorFilasCoach');
+            contenedor.innerHTML = "";
+            filasCoach.forEach((fila, idx) => {
+                contenedor.innerHTML += `
+                    <div style="background-color: #00030E;" class="border border-[#2C1B2F] p-3 rounded-2xl space-y-2 relative">
+                        <div class="flex justify-between items-center text-[10px] text-zinc-400 font-bold uppercase">
+                            <span>Ejercicio #${idx + 1}</span>
+                            ${filasCoach.length > 1 ? `<button onclick="eliminarFilaEjercicioCoach(${idx})" class="text-rose-400 hover:text-rose-300 cursor-pointer">Eliminar ✕</button>` : ''}
+                        </div>
+                        <input type="text" placeholder="Nombre ejercicio" value="${fila.ejercicio}" oninput="actualizarDatoFilaCoach(${idx}, 'ejercicio', this.value)" style="background-color: #0B0E1A; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-2 rounded-xl text-xs placeholder-zinc-600 focus:outline-none focus:border-[#B47A9A]">
+                        <input type="text" placeholder="Series y Reps" value="${fila.seriesReps}" oninput="actualizarDatoFilaCoach(${idx}, 'seriesReps', this.value)" style="background-color: #0B0E1A; color: #F3E9EC;" class="w-full border border-[#2C1B2F] p-2 rounded-xl text-xs placeholder-zinc-600 focus:outline-none focus:border-[#B47A9A]">
+                    </div>
+                `;
+            });
+        }
+
+        function actualizarDatoFilaCoach(idx, campo, valor) {
+            filasCoach[idx][campo] = valor;
+        }
+
+        function guardarRutinaDinamicaCoach() {
+            let nombreRutina = document.getElementById('inputNombreRutina').value.trim();
+            if(!nombreRutina) { alert("Ingresa un nombre para la rutina."); return; }
+
+            let listaNueva = [];
+            for(let f of filasCoach) {
+                if(f.ejercicio.trim() && f.seriesReps.trim()) {
+                    listaNueva.push({ nombre: f.ejercicio.trim(), seriesReps: f.seriesReps.trim(), historialPrevio: f.previo || "Primera vez" });
+                }
+            }
+            if(listaNueva.length === 0) { alert("Completa al menos un ejercicio."); return; }
+
+            let al = baseDatosAlumnos[alumnoActivoId];
+            al.rutinas[nombreRutina] = listaNueva;
+
+            document.querySelectorAll('.checkDia').forEach(c => {
+                if(c.checked) {
+                    al.rutinasAsociadasDias[c.parentElement.textContent.trim()] = nombreRutina;
+                }
+            });
+
+            guardarEnLocalStorage();
+            document.getElementById('inputNombreRutina').value = "";
+            document.getElementById('selectPlantilla').value = "";
+            inicializarFilasCoach();
+            alert(`¡Rutina "${nombreRutina}" guardada y vinculada con éxito!`);
+        }
+
+        function renderizarCalendarioCoachAsignacion() {
+            let grid = document.getElementById('gridCalendarioCoachAsignacion');
+            grid.innerHTML = `<div></div>`;
+            let al = baseDatosAlumnos[alumnoActivoId];
+
+            for(let i = 1; i <= 30; i++) {
+                let asignado = al.diasAsignados.includes(i);
+                let clases = "h-9 rounded-xl flex items-center justify-center font-bold text-xs cursor-pointer transition border ";
+                if(asignado) {
+                    clases += "bg-[#B47A9A]/30 border-[#B47A9A] text-[#F3E9EC]";
+                } else {
+                    clases += "bg-[#00030E] border-[#2C1B2F] text-zinc-600 hover:border-[#B47A9A]";
+                }
+                grid.innerHTML += `<div onclick="toggleDiaAsignadoCoach(${i})" class="${clases}">${i}</div>`;
+            }
+        }
+
+        function toggleDiaAsignadoCoach(dia) {
+            let al = baseDatosAlumnos[alumnoActivoId];
+            let idx = al.diasAsignados.indexOf(dia);
+            if(idx > -1) al.diasAsignados.splice(idx, 1);
+            else al.diasAsignados.push(dia);
+            guardarEnLocalStorage();
+            renderizarCalendarioCoachAsignacion();
+        }
+
+        function abrirModalInscripcion() { document.getElementById('modalInscripcion').classList.remove('hidden'); }
+        function cerrarModalInscripcion() { document.getElementById('modalInscripcion').classList.add('hidden'); }
+
+        function registrarNuevoAlumno() {
+            let nombre = document.getElementById('nuevoNombre').value.trim();
+            let pesoNum = parseFloat(document.getElementById('nuevoPesoNum').value);
+            let alturaNum = parseFloat(document.getElementById('nuevoAlturaNum').value);
+            let objetivo = document.getElementById('nuevoObjetivo').value.trim();
+
+            if(!nombre || isNaN(pesoNum) || isNaN(alturaNum)) { alert("Completa nombre, peso y altura válidos."); return; }
+
+            let idKey = nombre.toLowerCase().split(' ')[0] + Math.floor(Math.random() * 100);
+            baseDatosAlumnos[idKey] = {
+                id: idKey,
+                nombre: nombre,
+                pesoNum: pesoNum,
+                alturaNum: alturaNum,
+                banca: "Sin registrar",
+                sentadilla: "Sin registrar",
+                muerto: "Sin registrar",
+                objetivo: objetivo || "Mejora general",
+                diasAsignados: [1, 3, 7, 10, 15, 20],
+                diasCompletados: [],
+                bitacoraNotas: ["¡Bienvenido a GymRout!"],
+                rutinasAsociadasDias: { "Lunes": "Rutina Inicial" },
+                rutinas: {
+                    "Rutina Inicial": [
+                        { nombre: "Sentadilla libre", seriesReps: "3 series · 10 reps", historialPrevio: "Sin registro previo" }
+                    ]
+                }
+            };
+
+            guardarEnLocalStorage();
+            cerrarModalInscripcion();
+            poblarSelectAlumnos();
+            document.getElementById('selectAlumnoCoach').value = idKey;
+            actualizarPanelCoach();
+            alert(`¡Alumno ${nombre} registrado con éxito!`);
+        }
+
+        function enviarRespuestaCoach() {
+            let txt = document.getElementById('respuestaCoach').value.trim();
+            if(!txt) { alert("Escribe una corrección."); return; }
+            let al = baseDatosAlumnos[alumnoActivoId];
+            al.bitacoraNotas.push(txt);
+            guardarEnLocalStorage();
+            alert("¡Corrección enviada y guardada en la bitácora del alumno!");
+            document.getElementById('respuestaCoach').value = "";
+        }
+
+        window.onload = function() {
+            poblarSelectAlumnos();
+            actualizarPanelCoach();
+        };
+    </script>
+</body>
+</html>
